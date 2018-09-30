@@ -3,9 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import axios from 'axios'
+import store from './store'
+import './utils/elementUi/index'
+import './fetch/index'
+import './assets/common/common.css'
+import mixins from './mixins/index'
 
-Vue.prototype.$fetch = axios
+
+Vue.mixin(mixins)
 
 Vue.config.productionTip = false
 
@@ -13,6 +18,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

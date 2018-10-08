@@ -18,8 +18,8 @@
 <script>
   import rainDrop from "../../utils/canvas-raindrop";
   import {
-    localStorageSet,
-    localStorageGet
+    sessionStorageGet,
+    sessionStorageSet
   } from '../../utils/index';
 
 
@@ -32,7 +32,7 @@
       };
     },
     created() {
-      if (localStorageGet('userName')) this.$router.push('/home')
+      if (sessionStorageGet('userInfo')) this.$router.push('/home')
     },
     mounted() {
       rainDrop()()
@@ -43,6 +43,7 @@
           message: '请输入用户名',
           type: 'warning'
         })
+
         if (!this.userPsw) return this.$msg({
           message: '请输入密码',
           type: 'warning'
@@ -57,32 +58,26 @@
           params
         }).then(res => {
 
-          console.log(res)
-
           if (res.data.success) {
             this.$msg({
               message: '登录成功。',
               type: 'success'
             })
 
-            localStorageSet('userName', {
-              name: params.userName,
+            sessionStorageSet('userInfo', {
+              userInfo: res.data.userInfo,
               timeStamp: Date.now()
             })
 
-            this.$router.push({
-              path: '/home',
-              query: {
-                id: res.data.userInfo.id
-              }
+            this.$store.commit('setUserInfo', {
+              userInfo: res.data.userInfo
             })
+
+            this.$router.push('/home')
           } else {
             this.$msg.error(res.data.message)
           }
         }).catch(err => {
-
-          console.log(err)
-
           this.$msg.warning('服务器异常')
         })
       }

@@ -4,8 +4,8 @@ import {
   Message
 } from 'element-ui'
 import {
-  localStorageGet,
-  localStorageRemove
+  sessionStorageGet,
+  sessionStorageRemove
 } from '@/utils/index'
 
 Vue.use(Router)
@@ -35,17 +35,17 @@ const router = new Router({
         import('@/components/pages/article/detail.vue')
     },
     {
-      path: '/articles/add',
-      name: 'articleAdd',
+      path: '/articles/edit',
+      name: 'articleEdit',
       component: () =>
-        import('@/components/pages/article/add.vue')
+        import('@/components/pages/article/edit.vue')
     }
   ]
 })
 
 
 router.beforeEach((to, from, next) => {
-  let cache = localStorageGet('userName')
+  let cache = sessionStorageGet('userInfo')
 
   let now = Date.now()
 
@@ -57,7 +57,7 @@ router.beforeEach((to, from, next) => {
 
   if (cache && now - cache.timeStamp > 3600000) {
     Message.warning('账号过期，请重新登录！')
-    localStorageRemove('userName')
+    sessionStorageRemove('userInfo')
 
     next({
       path: '/'

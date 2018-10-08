@@ -1,11 +1,9 @@
-const AsyncMysqljs = require('../sql/config.js')()
+const AsyncMysqljs = require('../../sql/config.js')()
 
 const controller = async (ctx, next) => {
     let requestParams;
 
     requestParams = ctx.query
-
-    console.log(requestParams)
 
     if (!requestParams.article_id) {
         ctx.body = {

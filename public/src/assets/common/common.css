@@ -326,17 +326,24 @@ input[type='button'] {
   margin: 15px 0;
 }
 
+.el-row {
+  margin: 10px 0;
+}
+
 .loading_mask {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: rgba(0, 0, 0, .7);
 }
 
-.loading_mask image {
-  width: 30px;
-  height: 30px;
+.loading_mask img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .hide {
@@ -368,4 +375,8 @@ textarea {
 
 .t_center {
   text-align: center;
+}
+
+.t_right {
+  text-align: right;
 }

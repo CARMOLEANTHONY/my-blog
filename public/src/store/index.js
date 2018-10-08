@@ -1,13 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { sessionStorageGet} from '../utils/index'
 
 const state = {
-  userInfo: null
+  userInfo: sessionStorageGet('userInfo')
 }
 const getters = {}
 const mutations = {
   setUserInfo(state, data) {
-    state.setuserInfo = data
+    state.userInfo = data
   }
 }
 const actions = {}

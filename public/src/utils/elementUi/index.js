@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import 'element-ui/lib/theme-chalk/index.css'
+import CreateLoading from './loading'
 import {
   Form,
   FormItem,
@@ -51,40 +52,6 @@ Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$loading = Loading.service
-
-class CreateLoading {
-  constructor(options = {}) {
-    options = options || {}
-
-    this.dom = document.createElement('div')
-
-    this.dom.innerHTML = `<image class='center' src='/BLOGS/public/src/assets/images/loading1.gif'></image>`
-
-    this.dom.class = 'loading_mask'
-
-    this.duration = options.duration || 2000
-
-    this.isClose = true
-  }
-
-  close() {
-    if (this.isClose) return
-    this.dom.classList.add('hide')
-    document.body.removeChild(this.dom)
-  }
-
-  open() {
-    this.isClose = false
-
-    document.body.appendChild(this.dom)  
-    this.dom.classList.remove('hide')
-
-    setTimeout(() => {
-      !this.isClose && this.close()
-    }, this.duration)
-  }
-}
-
 Vue.prototype.$Loading = CreateLoading
 
 const arr = [

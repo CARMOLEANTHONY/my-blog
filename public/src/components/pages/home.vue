@@ -2,17 +2,22 @@
   <div class="container">
 
     <el-row class="to_add">
-      <router-link :to="`/articles/add?id=${id}`">发表文章</router-link>
+      <router-link :to="`/articles/edit?id=${id}`">发表文章</router-link>
     </el-row>
 
     <el-card class="list_card">
-      <el-row v-if="list" v-for="(item, index) in list" :key="index" class="item_style">
-        <el-col :span="13" class="pointer ellipse">
-          <router-link :to="`/articles/detail?article_id=${item.article_id}`">{{item.title}}</router-link>
-        </el-col>
-        <el-col :span="5" :offset="1">{{item.author_name}}</el-col>
-        <el-col :span="5">{{item.create_time | parseDate}}</el-col>
-      </el-row>
+      <div v-if="list.length > 0">
+        <el-row v-for="(item, index) in list" :key="index" class="item_style">
+          <el-col :span="13" class="pointer ellipse" @click.native="goDetail(item.article_id)">{{item.title}}
+          </el-col>
+          <el-col :span="5" :offset="1">{{item.author_name}}</el-col>
+          <el-col :span="5">{{item.create_time | parseDate}}</el-col>
+        </el-row>
+        <el-row>
+          <el-col @click.native="getMore" class="to_add">点击加载更多</el-col>
+        </el-row>
+      </div>
+      <el-row v-else class="t_center">暂未发表文章</el-row>
     </el-card>
 
   </div>
@@ -22,19 +27,21 @@
     name: "home",
     data() {
       return {
-        id: this.$route.query.id,
+        id: this.$store.state.userInfo.userInfo.id,
         content: "",
         title: "",
-        list: null
+        list: [],
+        page: 1
       };
     },
     created() {
-      this.getArticleList()
+      this.getArticleList(this.page)
     },
     methods: {
-      getArticleList() {
+      getArticleList(page) {
         const params = {
-          id: this.id
+          page,
+          size: 10
         };
 
         this.$fetch
@@ -43,9 +50,25 @@
           })
           .then(res => {
             if (res.data.success) {
-              this.list = res.data.list
+              if (res.data.list.length > 0) {
+                this.list.push(...res.data.list)
+              } else {
+                this.$msg.warning('没有更多文章了')
+                this.page--;
+              }
             }
           });
+      },
+      getMore() {
+        this.getArticleList(++this.page)
+      },
+      goDetail(article_id) {
+        this.$router.push({
+          path: '/articles/detail',
+          query: {
+            article_id
+          }
+        })
       }
     }
   };

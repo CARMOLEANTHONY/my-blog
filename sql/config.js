@@ -10,6 +10,7 @@ const defaultConfig = {
     password: '162458...',
     database: 'BLOG',
     host: '127.0.0.1',
+    multipleStatements: true
 }
 
 const AsyncMysqljs = function (config = defaultConfig) {
@@ -20,7 +21,7 @@ const AsyncMysqljs = function (config = defaultConfig) {
                 if (err) return reject(err)
                 conn.query(sql, values, (err, rows) => {
                     if (err) reject(err)
-                    else resolve(rows)
+                    else resolve(JSON.parse(JSON.stringify(rows)))
                     conn.release()
                 })
             })
@@ -35,7 +36,7 @@ const AsyncMysqljs = function (config = defaultConfig) {
         try {
             return q(sql, values).then(rows => {
                 if (rows.length >= 1) {
-                    return rows[0]
+                    return JSON.parse(JSON.stringify(rows[0]))
                 }
             })
         } catch (err) {

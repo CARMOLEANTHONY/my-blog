@@ -1,4 +1,4 @@
-const AsyncMysqljs = require('../sql/config.js')()
+const AsyncMysqljs = require('../../sql/config.js')()
 
 const controller = async (ctx, next) => {
 
@@ -28,7 +28,6 @@ const controller = async (ctx, next) => {
 
         ctx.body = {
             success: true,
-            author_id: requestParams.author_id,
             message: '发表成功！'
         }
     } catch (err) {

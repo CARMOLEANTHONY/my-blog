@@ -380,3 +380,7 @@ textarea {
 .t_right {
   text-align: right;
 }
+
+.ml_10 {
+  margin-left: 10px !important;
+}

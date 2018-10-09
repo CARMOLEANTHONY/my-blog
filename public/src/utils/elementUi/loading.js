@@ -17,6 +17,7 @@ class Loading {
       if (this.isClose) return
       this.dom.classList.add('hide')
       document.body.removeChild(this.dom)
+      this.isClose = true
     }
   
     open() {

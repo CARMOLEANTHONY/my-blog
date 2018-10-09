@@ -8,6 +8,9 @@ const controller = async (ctx, next) => {
 
     requestParams.last_rewrite_time = new Date()
 
+    delete requestParams.is_like
+    delete requestParams.commentList
+
     try {
         await AsyncMysqljs.insert(`UPDATE BLOG.blog_articles SET ? WHERE article_id = ?;`, [requestParams, requestParams.article_id])
 

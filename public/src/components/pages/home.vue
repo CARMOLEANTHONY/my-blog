@@ -1,8 +1,14 @@
 <template>
   <div class="container">
 
-    <el-row class="to_add">
-      <router-link :to="`/articles/edit?id=${id}`">发表文章</router-link>
+    <el-row type="flex" justify="center">
+      <el-button size="small" @click="toEdit">发表文章</el-button>
+      <el-button size="small" @click="allArticle">全部文章</el-button>
+      <el-button size="small" @click="myArticle">我的文章</el-button>
+      <el-select class="ml_10" v-model="currentAuthorId" placeholder="按作者搜索" @change="handleChange">
+        <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id">
+        </el-option>
+      </el-select>
     </el-row>
 
     <el-card class="list_card">
@@ -28,21 +34,52 @@
     data() {
       return {
         id: this.$store.state.userInfo.userInfo.id,
-        content: "",
-        title: "",
         list: [],
-        page: 1
-      };
+        page: 1,
+        getAll: true,
+        userList: [],
+        currentAuthorId: ''
+      }
+    },
+    watch: {
+      currentAuthorId: {
+        handler: function (value) {
+          this.page = 1
+          this.list = []
+
+          this.getAll ? this.getArticleList(this.page) : this.getArticleList(this.page, value)
+        },
+        immediate: true
+      }
     },
     created() {
-      this.getArticleList(this.page)
+      this.getUserList()
     },
     methods: {
-      getArticleList(page) {
+      allArticle() {
+        this.getAll = true
+        this.currentAuthorId = ''
+      },
+      myArticle() {
+        this.getAll = false
+        this.currentAuthorId = this.$store.state.userInfo.userInfo.id
+      },
+      toEdit() {
+        this.$router.push({
+          path: '/articles/edit',
+          query: {
+            id: this.id
+          }
+        })
+      },
+      getArticleList(page, id) {
         const params = {
           page,
-          size: 10
+          size: 10,
+          uId: this.$store.state.userInfo.userInfo.id
         };
+
+        if (id) params.id = id
 
         this.$fetch
           .get("/getArticleList", {
@@ -60,7 +97,7 @@
           });
       },
       getMore() {
-        this.getArticleList(++this.page)
+        this.getArticleList(++this.page, this.getAll ? null : this.currentAuthorId)
       },
       goDetail(article_id) {
         this.$router.push({
@@ -69,6 +106,17 @@
             article_id
           }
         })
+      },
+      getUserList() {
+        this.$fetch.get('/getUserList').then(res => {
+          if (res.data.success) {
+            this.userList = res.data.list
+          }
+        })
+      },
+      handleChange(value) {
+        // this.currentAuthorId = value
+        // this.getArticleList(this.page, this.currentAuthorId)
       }
     }
   };

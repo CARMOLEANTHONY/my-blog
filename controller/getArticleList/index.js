@@ -5,13 +5,14 @@ const controller = async (ctx, next) => {
     let {
         page,
         size,
-        id
+        id,
+        uId
     } = ctx.query
 
     if (id) {
         try {
 
-            const res = await AsyncMysqljs.query(`select * from blog_articles where author_id = ? limit ?,?; select count(author_id) from blog_articles where author_id = ?;`, [id - 0, (page - 1) * size, page * size, id - 0])
+            const res = await AsyncMysqljs.query(`select * from blog_articles where author_id = ? ${id == uId ? '':'and is_private = 0'} limit ?,?; select count(author_id) from blog_articles where author_id = ?${id == uId ? '':' and is_private = 0'};`, [id - 0, (page - 1) * size, page * size, id - 0])
 
             let count = res[1][0]['count(author_id)']
 

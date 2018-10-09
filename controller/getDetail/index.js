@@ -1,11 +1,13 @@
 const AsyncMysqljs = require('../../sql/config.js')()
 
 const controller = async (ctx, next) => {
-    let requestParams;
 
-    requestParams = ctx.query
+    let {
+        uId,
+        article_id
+    } = ctx.query
 
-    if (!requestParams.article_id) {
+    if (!article_id) {
         ctx.body = {
             message: '参数错误',
             success: false
@@ -15,17 +17,23 @@ const controller = async (ctx, next) => {
     }
 
     try {
-        const res = await AsyncMysqljs.query(`select * from BLOG.blog_articles where article_id = ?;`, [requestParams.article_id])
+        const res = await AsyncMysqljs.get(`select * from BLOG.blog_articles where article_id = ?;`, [article_id])
+        
+        res.like_user_id_list = res.like_user_id_list == null ? '': res.like_user_id_list
+        res.is_like = res.like_user_id_list.indexOf(uId) > -1 ? true : false
+
+        res.commentList = await AsyncMysqljs.query(`SELECT * from comment WHERE parent_id = ?`, [article_id])
+
 
         ctx.body = {
             success: true,
-            detail: res[0]
+            detail: res
         }
 
     } catch (err) {
         ctx.body = {
             success: false,
-            list: res.sqlMessage
+            list: err.sqlMessage || err
         }
     }
 

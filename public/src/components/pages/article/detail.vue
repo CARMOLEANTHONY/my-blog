@@ -25,7 +25,7 @@
       <el-row>
         <q-editor ref="comment" :editorOption="editorOption"></q-editor>
       </el-row>
-      <comment-list :commentList="detail.commentList"></comment-list>
+      <comment-list :commentList="detail.commentList" v-highlight class="show_pre"></comment-list>
     </el-card>
   </div>
 </template>
@@ -141,7 +141,6 @@
   .content_style {
     padding: 30px 0;
     border-bottom: 1px solid #333;
-    text-indent: 2em;
   }
 
 </style>

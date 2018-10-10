@@ -22,7 +22,7 @@ const controller = async (ctx, next) => {
         res.like_user_id_list = res.like_user_id_list == null ? '': res.like_user_id_list
         res.is_like = res.like_user_id_list.indexOf(uId) > -1 ? true : false
 
-        res.commentList = await AsyncMysqljs.query(`SELECT * from comment WHERE parent_id = ?`, [article_id])
+        res.commentList = await AsyncMysqljs.query(`SELECT * from comment WHERE parent_id = ? order by comment_time desc`, [article_id])
 
 
         ctx.body = {

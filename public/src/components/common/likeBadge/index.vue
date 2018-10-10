@@ -1,5 +1,5 @@
 <template>
-  <el-badge :value="valueNum" :max="max" class="pointer">
+  <el-badge :value="valueNum" :max="max" class="pointer badge_style">
     <img :src="isLiked?liked:like" @click="likeToggle">
   </el-badge>
 </template>
@@ -57,3 +57,14 @@
   }
 
 </script>
+<style lang="scss" scoped>
+  .badge_style {
+    height: 30px;
+    line-height: 30px;
+    img {
+      height: 20px;
+      vertical-align: middle;
+    }
+  }
+
+</style>

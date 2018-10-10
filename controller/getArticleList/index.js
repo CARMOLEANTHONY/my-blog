@@ -6,13 +6,20 @@ const controller = async (ctx, next) => {
         page,
         size,
         id,
-        uId
+        uId,
+        searchValue
     } = ctx.query
+
+    let fuzzyQuerySql = searchValue ? ` and (title like '%${searchValue}%' or content like '%${searchValue}%' or author_name like '%${searchValue}%' or create_time like '%${searchValue.replace(/(\/|\.)/g, '-')}%')` : ''
 
     if (id) {
         try {
 
-            const res = await AsyncMysqljs.query(`select * from blog_articles where author_id = ? ${id == uId ? '':'and is_private = 0'} limit ?,?; select count(author_id) from blog_articles where author_id = ?${id == uId ? '':' and is_private = 0'};`, [id - 0, (page - 1) * size, page * size, id - 0])
+            let privateSql = id == uId ? '' : ' and is_private = 0'
+
+            let sql = `select * from blog_articles where author_id = ?${privateSql}${fuzzyQuerySql} order by last_rewrite_time desc limit ?,?; select count(author_id) from blog_articles where author_id = ?${privateSql}${fuzzyQuerySql};`
+
+            const res = await AsyncMysqljs.query(sql, [id - 0, (page - 1) * size, size - 0, id - 0])
 
             let count = res[1][0]['count(author_id)']
 
@@ -33,7 +40,7 @@ const controller = async (ctx, next) => {
     } else {
         try {
 
-            const res = await AsyncMysqljs.query(`select * from blog_articles where is_private = 0 limit ?,?; select count(*) from blog_articles where is_private = 0;`, [(page - 1) * size, page * size])
+            const res = await AsyncMysqljs.query(`select * from blog_articles where is_private = 0${fuzzyQuerySql} order by last_rewrite_time desc limit ?,?; select count(*) from blog_articles where is_private = 0${fuzzyQuerySql};`, [(page - 1) * size, size - 0])
 
             let count = res[1][0]['count(*)']
 

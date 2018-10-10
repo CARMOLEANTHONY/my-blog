@@ -2,7 +2,7 @@
   <div>
     <el-card class="add_card">
       <el-input placeholder="请点击输入标题" v-model="detail.title" class="title"></el-input>
-      <el-input type="textarea" v-model="detail.content" placeholder="请点击输入"></el-input>
+      <q-editor ref="editor"></q-editor>
       <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="3">是否公开</el-col>
         <el-col>
@@ -13,13 +13,14 @@
         </el-col>
       </el-row>
       <el-row type="flex" justify="center">
-        <el-button @click="goBack" size="primary" class="ml_10">取消</el-button>
-        <el-button @click="submit" size="primary">发表</el-button>
+        <el-button @click="goBack" size="primary">取消</el-button>
+        <el-button @click="submit" size="primary" class="ml_10">发表</el-button>
       </el-row>
     </el-card>
   </div>
 </template>
 <script>
+  import qEditor from '../../common/editor/index'
   export default {
     name: 'articleEdit',
     data() {
@@ -32,6 +33,9 @@
           is_private: 0
         }
       }
+    },
+    components: {
+      qEditor
     },
     created() {
       !this.isCreate && this.getDetails()
@@ -46,6 +50,8 @@
         this.$router.go(-1)
       },
       submit() {
+        this.detail.content = this.$refs.editor.currentContent
+
         let params = {
           content: this.detail.content,
           title: this.detail.title,
@@ -54,8 +60,8 @@
           is_private: this.detail.is_private
         };
 
-        if (!params.content) return this.$msg.error('内容不可为空')
         if (!params.title) return this.$msg.error('标题不可为空')
+        if (!params.content) return this.$msg.error('内容不可为空')
 
         if (this.isCreate) {
           this.$fetch.post("/addArticle", params).then(res => {
@@ -87,6 +93,7 @@
           .then(res => {
             if (res.data.success) {
               this.detail = res.data.detail
+              this.$refs.editor.setContent(res.data.detail.content)
             }
           })
       }

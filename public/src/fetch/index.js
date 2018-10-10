@@ -29,7 +29,6 @@ fetch.interceptors.request.use(
   },
   err => {
     loading.close();
-    throttle = false
     Message.error(err || '服务器异常')
   }
 )

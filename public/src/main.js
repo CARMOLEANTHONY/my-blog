@@ -8,7 +8,8 @@ import './utils/elementUi/index'
 import './fetch/index'
 import './assets/common/common.css'
 import mixins from './mixins/index'
-
+import './directives/highlight'
+import './utils/vueQuillEditor'
 
 Vue.mixin(mixins)
 
@@ -19,6 +20,8 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })

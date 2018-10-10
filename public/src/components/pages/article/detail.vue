@@ -9,14 +9,13 @@
         <el-col :span="12">发表时间：{{detail.create_time | parseDate}}</el-col>
         <el-col :span="12" class="t_right">最后修改时间：{{detail.last_rewrite_time | parseDate}}</el-col>
       </el-row>
-      <pre v-if="detail.content" class="content_style">
-        {{detail.content}}
-      </pre>
+      <div v-if="detail.content" class="content_style show_pre" v-highlight v-html="detail.content">
+      </div>
       <el-row>
         <el-col :span="12">
           <el-button v-if="canDelete" size="small" @click="deleteArticle">删除</el-button>
           <el-button v-if="canDelete" size="small" @click="edit">编辑</el-button>
-          <el-button v-if="canDelete" size="small" @click="back">返回主页</el-button>
+          <el-button size="small" @click="back">返回主页</el-button>
           <el-button size="small" @click="comment">评论</el-button>
         </el-col>
         <el-col :span="12" class="t_right">
@@ -24,7 +23,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-input type="textarea" placeholder="点击输入评论" v-model="commentContent"></el-input>
+        <q-editor ref="comment" :editorOption="editorOption"></q-editor>
       </el-row>
       <comment-list :commentList="detail.commentList"></comment-list>
     </el-card>
@@ -35,6 +34,7 @@
   import liked from '../../../assets/images/liked.png'
   import likeBadge from '../../common/likeBadge/index'
   import commentList from '../../common/commentList/index'
+  import qEditor from '../../common/editor/index'
   export default {
     name: 'articleDetail',
     data() {
@@ -43,12 +43,16 @@
         detail: {},
         like,
         liked,
-        commentContent: ''
+        commentContent: '',
+        editorOption: {
+          placeholder: '点击输入评论'
+        }
       }
     },
     components: {
       likeBadge,
-      commentList
+      commentList,
+      qEditor
     },
     created() {
       this.getDetails()
@@ -66,6 +70,9 @@
         this.$router.push('/home')
       },
       comment() {
+        this.commentContent = this.$refs.comment.currentContent
+        this.$refs.comment.setContent('')
+
         if (!this.commentContent) return this.$msg.warning('评论不可为空')
 
         let params = {
@@ -89,11 +96,18 @@
           })
       },
       deleteArticle() {
-        this.$fetch.get(`/deleteArticle?article_id=${this.article_id}`).then(res => {
-          if (res.data.success) {
-            this.$msg.success('删除成功！')
-            this.$router.push('/home')
-          }
+        this.$confirm('Are You Sure You Want To Delete This Article？', 'WARNING!!!', {
+          confirmButtonText: 'YES',
+          cancelButtonText: 'CANCEL',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.$fetch.get(`/deleteArticle?article_id=${this.article_id}`).then(res => {
+            if (res.data.success) {
+              this.$msg.success('删除成功！')
+              this.$router.push('/home')
+            }
+          })
         })
       },
       edit() {
@@ -104,9 +118,6 @@
             article_id: this.article_id
           }
         })
-      },
-      likeToggle() {
-
       }
     }
   }

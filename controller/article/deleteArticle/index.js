@@ -1,4 +1,4 @@
-const AsyncMysqljs = require('../../sql/config.js')()
+const AsyncMysqljs = require('../../../sql/config.js')()
 
 const controller = async (ctx, next) => {
     let {

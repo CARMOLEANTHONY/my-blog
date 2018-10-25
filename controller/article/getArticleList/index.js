@@ -1,4 +1,4 @@
-const AsyncMysqljs = require('../../sql/config.js')()
+const AsyncMysqljs = require('../../../sql/config.js')()
 
 const controller = async (ctx, next) => {
 
@@ -10,16 +10,22 @@ const controller = async (ctx, next) => {
         searchValue
     } = ctx.query
 
-    let fuzzyQuerySql = searchValue ? ` and (title like '%${searchValue}%' or content like '%${searchValue}%' or author_name like '%${searchValue}%' or create_time like '%${searchValue.replace(/(\/|\.)/g, '-')}%')` : ''
+    let fuzzyQuerySql = searchValue ? ` and (title like '%${searchValue}%' or content like '%${searchValue}%' or author_name like '%${searchValue}%' or create_time like binary '%${searchValue.replace(/(\/|\.)/g, '-')}%')` : ''
+
+    page = Number(page)
+    size = Number(size)
+    id = Number(id)
 
     if (id) {
         try {
+
+
 
             let privateSql = id == uId ? '' : ' and is_private = 0'
 
             let sql = `select * from blog_articles where author_id = ?${privateSql}${fuzzyQuerySql} order by last_rewrite_time desc limit ?,?; select count(author_id) from blog_articles where author_id = ?${privateSql}${fuzzyQuerySql};`
 
-            const res = await AsyncMysqljs.query(sql, [id - 0, (page - 1) * size, size - 0, id - 0])
+            const res = await AsyncMysqljs.query(sql, [id, (page - 1) * size, size, id])
 
             let count = res[1][0]['count(author_id)']
 
@@ -40,7 +46,7 @@ const controller = async (ctx, next) => {
     } else {
         try {
 
-            const res = await AsyncMysqljs.query(`select * from blog_articles where is_private = 0${fuzzyQuerySql} order by last_rewrite_time desc limit ?,?; select count(*) from blog_articles where is_private = 0${fuzzyQuerySql};`, [(page - 1) * size, size - 0])
+            const res = await AsyncMysqljs.query(`select * from blog_articles where is_private = 0${fuzzyQuerySql} order by last_rewrite_time desc limit ?,?; select count(*) from blog_articles where is_private = 0${fuzzyQuerySql};`, [(page - 1) * size, size])
 
             let count = res[1][0]['count(*)']
 

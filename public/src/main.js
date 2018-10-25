@@ -6,10 +6,12 @@ import router from './router'
 import store from './store'
 import './utils/elementUi/index'
 import './fetch/index'
-import './assets/common/common.css'
+import './assets/common/index.sass'
 import mixins from './mixins/index'
 import './directives/highlight'
 import './utils/vueQuillEditor'
+import 'highlight.js/styles/googlecode.css'
+import 'animate.css/animate.min.css'
 
 Vue.mixin(mixins)
 

@@ -54,11 +54,9 @@ const controller = async (ctx, next) => {
     } catch (err) {
         ctx.body = {
             success: false,
-            message: err.sqlMessage || err
+            message: err.code || err
         }
     }
-
-
 
 }
 

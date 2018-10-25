@@ -10,7 +10,8 @@ const defaultConfig = {
     password: '162458...',
     database: 'BLOG',
     host: '127.0.0.1',
-    multipleStatements: true
+    multipleStatements: true,
+    charset: 'UTF8'
 }
 
 const AsyncMysqljs = function (config = defaultConfig) {

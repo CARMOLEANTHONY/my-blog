@@ -4,7 +4,8 @@ const controller = async (ctx, next) => {
 
     let {
         uId,
-        article_id
+        article_id,
+        isReading
     } = ctx.query
 
     if (!article_id) {
@@ -18,12 +19,15 @@ const controller = async (ctx, next) => {
 
     try {
         const res = await AsyncMysqljs.get(`select * from BLOG.blog_articles where article_id = ?;`, [article_id])
-        
-        res.like_user_id_list = res.like_user_id_list == null ? '': res.like_user_id_list
+
+        if (isReading) {
+            await AsyncMysqljs.update(`update BLOG.blog_articles set ? where article_id = ?`, [{
+                read_count: ++res.read_count
+            }, article_id])
+        }
+
+        res.like_user_id_list = res.like_user_id_list == null ? '' : res.like_user_id_list
         res.is_like = res.like_user_id_list.indexOf(uId) > -1 ? true : false
-
-        res.commentList = await AsyncMysqljs.query(`SELECT * from comment WHERE parent_id = ? order by comment_time desc`, [article_id])
-
 
         ctx.body = {
             success: true,
@@ -33,7 +37,7 @@ const controller = async (ctx, next) => {
     } catch (err) {
         ctx.body = {
             success: false,
-            list: err.sqlMessage || err
+            message: err.code
         }
     }
 

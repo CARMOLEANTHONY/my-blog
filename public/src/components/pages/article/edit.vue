@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="detail_page">
     <el-card class="add_card">
-      <el-input placeholder="请点击输入标题" v-model="detail.title" class="title"></el-input>
+      <el-input placeholder="请点击输入标题" v-model="detail.title" class="title reserve-space"></el-input>
       <q-editor ref="editor"></q-editor>
       <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="3">是否公开</el-col>
@@ -20,37 +20,39 @@
   </div>
 </template>
 <script>
-  import qEditor from '../../common/editor/index'
+  import qEditor from "../../common/editor/index";
+  import eDialog from "../../common//dialog/index";
   export default {
-    name: 'articleEdit',
+    name: "articleEdit",
     data() {
       return {
         id: this.$route.query.id,
         article_id: this.$route.query.article_id || null,
         detail: {
-          title: '',
-          content: '',
+          title: "",
+          content: "",
           is_private: 0
         }
-      }
+      };
     },
     components: {
-      qEditor
+      qEditor,
+      eDialog
     },
     created() {
-      !this.isCreate && this.getDetails()
+      !this.isCreate && this.getDetails();
     },
     computed: {
       isCreate() {
-        return this.article_id ? false : true
+        return this.article_id ? false : true;
       }
     },
     methods: {
       goBack() {
-        this.$router.go(-1)
+        this.$router.go(-1);
       },
       submit() {
-        this.detail.content = this.$refs.editor.currentContent
+        this.detail.content = this.$refs.editor.result;
 
         let params = {
           content: this.detail.content,
@@ -60,48 +62,52 @@
           is_private: this.detail.is_private
         };
 
-        if (!params.title) return this.$msg.error('标题不可为空')
-        if (!params.content) return this.$msg.error('内容不可为空')
+        if (!params.title) return this.$msg.error("标题不可为空");
+        if (params.title.length > 30) return this.$msg.error("标题太长");
+        if (!params.content) return this.$msg.error("内容不可为空");
 
         if (this.isCreate) {
           this.$fetch.post("/addArticle", params).then(res => {
             if (res.data.success) {
-              this.$msg.success(res.data.message)
+              this.$msg.success(res.data.message);
 
-              this.$router.push('/home')
+              this.$router.push("/home");
             }
           });
         } else {
-          params = Object.assign(this.detail, params)
+          params = Object.assign(this.detail, params);
 
           this.$fetch.post("/updateArticle", params).then(res => {
             if (res.data.success) {
-              this.$msg.success(res.data.message)
+              this.$msg.success(res.data.message);
 
               this.$router.push({
-                path: '/articles/detail',
+                path: "/articles/detail",
                 query: {
                   article_id: this.detail.article_id
                 }
-              })
+              });
             }
           });
         }
       },
       getDetails() {
-        this.$fetch.get(`/getDetail?article_id=${this.article_id}`)
-          .then(res => {
-            if (res.data.success) {
-              this.detail = res.data.detail
-              this.$refs.editor.setContent(res.data.detail.content)
-            }
-          })
+        this.$fetch.get(`/getDetail?article_id=${this.article_id}`).then(res => {
+          if (res.data.success) {
+            this.detail = res.data.detail;
+            this.$refs.editor.setContent(res.data.detail.content);
+          }
+        });
       }
     }
-  }
+  };
 
 </script>
 <style lang="scss" scoped>
+  .detail_page {
+    overflow: hidden;
+  }
+
   .add_card {
     min-width: 500px;
     max-width: 1000px;

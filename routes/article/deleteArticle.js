@@ -1,6 +1,6 @@
 const router = require('koa-router')()
 
-const controller = require('../controller/deleteArticle/index')
+const controller = require('../../controller/article/deleteArticle/index')
 
 router.get('/deleteArticle',  (ctx, next) => controller(ctx, next))
 

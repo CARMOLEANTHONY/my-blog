@@ -2,101 +2,53 @@ import Vue from 'vue'
 import 'element-ui/lib/theme-chalk/index.css'
 import CreateLoading from './loading'
 import {
-  Form,
-  FormItem,
   Input,
   InputNumber,
   Select,
   Option,
   Button,
-  Tree,
-  Breadcrumb,
-  BreadcrumbItem,
-  Checkbox,
-  CheckboxGroup,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  Table,
-  TableColumn,
   Message,
   MessageBox,
   Dialog,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
   Radio,
-  RadioGroup,
-  Menu,
-  MenuItem,
-  Submenu,
   Pagination,
-  Tabs,
-  TabPane,
   Row,
   Badge,
   Col,
-  Cascader,
-  DatePicker,
   Card,
-  Collapse,
-  CollapseItem,
-  Upload,
-  Steps,
-  Step,
-  Loading,
-  Progress,
-  Tooltip,
-  Transfer,
-  Switch
+  Notification
 } from 'element-ui'
 
 Vue.prototype.$msg = Message
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
-Vue.prototype.$loading = Loading.service
+Vue.prototype.$notify = Notification
 Vue.prototype.$Loading = CreateLoading
 
+Vue.prototype.$ELEMENT = {
+  zIndex: 9999
+};
+
 const arr = [
-  Form,
-  FormItem,
   Input,
   InputNumber,
   Select,
   Option,
   Button,
-  Tree,
-  Breadcrumb,
-  BreadcrumbItem,
-  Checkbox,
-  CheckboxGroup,
+  Badge,
+  Dialog,
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Table,
-  Badge,
-  TableColumn,
-  Dialog,
   Radio,
-  RadioGroup,
-  Menu,
-  MenuItem,
-  Submenu,
   Pagination,
-  Tabs,
-  TabPane,
   Row,
   Col,
-  Cascader,
-  DatePicker,
-  Card,
-  Collapse,
-  CollapseItem,
-  Upload,
-  Steps,
-  Step,
-  Progress,
-  Tooltip,
-  Transfer,
-  Switch
+  Card
 ]
 
 for (let i = 0; i < arr.length; i++) {

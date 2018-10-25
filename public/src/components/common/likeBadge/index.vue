@@ -12,8 +12,22 @@
       return {
         like,
         liked,
-        isLiked: this.is_like,
-        valueNum: this.value
+        isLiked: false,
+        valueNum: 0
+      }
+    },
+    watch: {
+      isLike: {
+        handler: function (val) {
+          this.isLiked = val
+        },
+        immediate: true
+      },
+      value: {
+        handler: function (val) {
+          this.valueNum = val
+        },
+        immediate: true
       }
     },
     props: {
@@ -29,7 +43,7 @@
       aId: {
         type: String
       },
-      is_like: {
+      isLike: {
         typle: Boolean,
         default: false
       },
@@ -59,10 +73,11 @@
 </script>
 <style lang="scss" scoped>
   .badge_style {
-    height: 30px;
-    line-height: 30px;
+    height: 20px;
+    line-height: 20px;
+
     img {
-      height: 20px;
+      height: 15px;
       vertical-align: middle;
     }
   }

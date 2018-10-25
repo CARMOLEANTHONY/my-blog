@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <canvas id="cas"></canvas>
+    <canvas ref="cas"></canvas>
     <div class="login_box center">
       <div class="input_box">
         <el-input placeholder="请输入用户" v-model="userName" class="login_el">
@@ -19,9 +19,9 @@
   import rainDrop from "../../utils/canvas-raindrop";
   import {
     sessionStorageGet,
-    sessionStorageSet
+    sessionStorageSet,
+    sessionStorageRemove
   } from '../../utils/index';
-
 
   export default {
     name: 'login',
@@ -35,7 +35,10 @@
       if (sessionStorageGet('userInfo')) this.$router.push('/home')
     },
     mounted() {
-      rainDrop()()
+      rainDrop.init(this.$refs.cas)
+    },
+    beforeDestroy() {
+      rainDrop.stop()
     },
     methods: {
       loginHandler() {
@@ -73,7 +76,16 @@
               userInfo: res.data.userInfo
             })
 
-            this.$router.push('/home')
+            const ERROR_MESSAGE = sessionStorageGet('ERROR_MESSAGE')
+
+            if (ERROR_MESSAGE == 'TIMEOUT' || ERROR_MESSAGE == 'NOLOGIN') {
+              sessionStorageRemove('ERROR_MESSAGE')
+
+              this.$router.go(-1)
+            } else {
+              this.$router.push('/home')
+            }
+
           } else {
             this.$msg.error(res.data.message)
           }

@@ -1,6 +1,6 @@
 const router = require('koa-router')()
 
-const controller = require('../controller/updateArticle/index')
+const controller = require('../../controller/article/updateArticle/index')
 
 router.post('/updateArticle',  (ctx, next) => controller(ctx, next))
 

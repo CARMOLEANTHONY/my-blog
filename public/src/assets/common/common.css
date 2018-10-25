@@ -86,8 +86,6 @@ summary {
   display: block;
 }
 
-/* Handle box-sizing while better addressing child elements:
-   http://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/ */
 html {
   box-sizing: border-box;
 }
@@ -96,6 +94,9 @@ html,
 body {
   width: 100%;
   height: 100%;
+  font-family: "微软雅黑";
+  color: #555;
+  font-size: 16px;
 }
 
 *,
@@ -104,33 +105,12 @@ body {
   box-sizing: inherit;
 }
 
-/* consider resetting the default cursor: https://gist.github.com/murtaugh/5247154 */
-
-/* Responsive images and other embedded objects */
-/* if you don't have full control over `img` tags (if you have to overcome attributes), consider adding height: auto */
 img,
 object,
 embed {
   max-width: 100%;
 }
 
-/*
-   Note: keeping IMG here will cause problems if you're using foreground images as sprites.
-	In fact, it *will* cause problems with Google Maps' controls at small size.
-	If this is the case for you, try uncommenting the following:
-#map img {
-		max-width: none;
-}
-*/
-
-/* force a vertical scrollbar to prevent a jumpy page */
-html {
-  /*overflow-y: scroll;*/
-}
-
-/* we use a lot of ULs that aren't bulleted.
-	you'll have to restore the bullets within content,
-	which is fine because they're probably customized anyway */
 ul {
   list-style: none;
 }
@@ -197,14 +177,12 @@ select {
 }
 
 pre {
-  white-space: pre;
-  /* CSS2 */
   white-space: pre-wrap;
-  /* CSS 2.1 */
-  white-space: pre-line;
-  /* CSS 3 (and 2.1 as well, actually) */
+
+  /* 是否换行 */
+  /* white-space: pre; */
+
   word-wrap: break-word;
-  /* IE */
 }
 
 input[type='radio'] {
@@ -319,40 +297,10 @@ input[type='button'] {
   transform: translate(-50%, -50%);
 }
 
-/* element ui 样式调整 */
-
-.el_input,
-.login_el {
-  margin: 15px 0;
-}
-
-.el-row {
-  margin: 10px 0;
-}
-
-.loading_mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, .7);
-}
-
-.loading_mask img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .hide {
   display: none;
 }
 
-.pointer {
-  cursor: pointer;
-}
 
 .ellipse {
   overflow: hidden;
@@ -360,17 +308,6 @@ input[type='button'] {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
-}
-
-textarea {
-  min-height: 100px !important;
-}
-
-.title input {
-  text-align: center;
-  font-size: 20px;
-  font-weight: 900;
-  border: none;
 }
 
 .t_center {
@@ -381,6 +318,14 @@ textarea {
   text-align: right;
 }
 
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
 .ml_10 {
   margin-left: 10px !important;
 }
@@ -388,10 +333,3 @@ textarea {
 .strong {
   font-weight: bold;
 }
-
-.show_pre pre {
-  background: url('../images/code_bg.png') #f6f6f6 !important;
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-

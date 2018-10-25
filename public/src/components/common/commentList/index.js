@@ -1,4 +1,5 @@
 import mixin from '../../../mixins'
+import LikeBadge from '../likeBadge/index'
 
 export default {
   render: function (h) {
@@ -26,13 +27,22 @@ export default {
         }
       }, mixin.filters.parseDate(item.comment_time))]), h('div', {
         style: {
-          padding: '0 20px',
-          textIndent: '20px'
+          padding: '0 20px'
         },
+        class: 'ql-editor',
         domProps: {
           innerHTML: item.content
-        }
-      }, item.content), ...this.renderList(item, h)])
+        },
+        directives: [{
+          name: 'highlight'
+        }, h('like-badge', {
+          props: {
+            aId: item.comment_id,
+            value: 3,
+            isLike: true
+          }
+        })]
+      }), ...this.renderList(item, h)])
     }))
   },
   props: {
@@ -40,6 +50,9 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  components: {
+    LikeBadge
   },
   methods: {
     renderList(item, h) {
@@ -69,10 +82,15 @@ export default {
           }
         }, item.user_name)]), h('p', {
           style: {
-            padding: '20px',
-            textIndent: '2em'
-          }
-        }, v.content), ...this.renderList(v, h)])
+            padding: '20px'
+          },
+          directives: [{
+            name: 'highlight'
+          }],
+          domProps: {
+            innerHTML: v.content
+          },
+        }), ...this.renderList(v, h)])
       })
     }
   }
